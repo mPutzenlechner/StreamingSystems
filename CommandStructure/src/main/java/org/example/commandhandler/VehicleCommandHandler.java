@@ -8,6 +8,7 @@ import org.example.domainmodel.VehicleRegister;
 import org.example.services.EventStoreService;
 
 public class VehicleCommandHandler {
+    private static final VehicleCommandHandler instance = new VehicleCommandHandler();
 
     VehicleRegister vehicleRegister;
     EventStoreService eventStoreService;
@@ -16,6 +17,10 @@ public class VehicleCommandHandler {
     public VehicleCommandHandler() {
         vehicleRegister = VehicleRegister.getInstance();
         eventStoreService = EventStoreService.getInstance();
+    }
+
+    public static VehicleCommandHandler getInstance() {
+        return instance;
     }
 
     public void issueCommand(ICommand command) throws Exception {
