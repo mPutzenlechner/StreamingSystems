@@ -12,14 +12,4 @@ public class RemoveVehicleCommand implements ICommand {
     public String getName() {
         return name;
     }
-
-    @Override
-    public IEvent resolve() {
-        return new RemoveVehicleEvent(this.name);
-    }
-
-    @Override
-    public Exception reject(String reason) throws Exception {
-        throw new Exception(reason);
-    }
 }

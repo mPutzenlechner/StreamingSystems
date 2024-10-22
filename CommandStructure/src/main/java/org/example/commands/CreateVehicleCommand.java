@@ -20,14 +20,4 @@ public class CreateVehicleCommand implements ICommand {
     public Position getStartPosition() {
         return startPosition;
     }
-
-    @Override
-    public IEvent resolve() {
-        return null;
-    }
-
-    @Override
-    public Exception reject(String reason) throws Exception {
-        throw new Exception(reason);
-    }
 }

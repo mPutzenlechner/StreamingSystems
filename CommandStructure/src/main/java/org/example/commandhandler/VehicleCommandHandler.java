@@ -5,6 +5,9 @@ import org.example.commands.MoveVehicleCommand;
 import org.example.commands.RemoveVehicleCommand;
 import org.example.domainmodel.Vehicle;
 import org.example.domainmodel.VehicleRegister;
+import org.example.events.CreateVehicleEvent;
+import org.example.events.MoveVehicleEvent;
+import org.example.events.RemoveVehicleEvent;
 import org.example.services.EventStoreService;
 
 public class VehicleCommandHandler {
@@ -26,6 +29,10 @@ public class VehicleCommandHandler {
     public void issueCommand(ICommand command) throws Exception {
         if (command instanceof CreateVehicleCommand) {
             this.createVehicle((CreateVehicleCommand) command);
+        } else if (command instanceof MoveVehicleCommand) {
+            this.moveVehicle((MoveVehicleCommand) command);
+        } else if (command instanceof RemoveVehicleCommand) {
+            this.removeVehicle((RemoveVehicleCommand) command);
         }
     }
 
@@ -33,11 +40,11 @@ public class VehicleCommandHandler {
         // Check if vehicle already exists
         String name = command.getName();
         if (vehicleRegister.vehicleExists(name)) {
-            throw command.reject("vehicle with name " + name + "already exists");
+            throw new Exception("vehicle with name " + name + "already exists");
         }
         // Does not exist. Generate event.
         Vehicle vehicle = new Vehicle(command.getName(), command.getStartPosition());
-        this.eventStoreService.raiseEvent(command.resolve());
+        this.eventStoreService.raiseEvent(new CreateVehicleEvent(command.getName(), command.getStartPosition()));
 
         // Change local domain model. TODO: change this to be inferred from event store
         this.vehicleRegister.createVehicle(vehicle.name, vehicle);
@@ -46,10 +53,10 @@ public class VehicleCommandHandler {
     private void moveVehicle(MoveVehicleCommand command) throws Exception {
         // Check validity
         if (command.getVector() == null || command.getVector().x() == 0 && command.getVector().y() == 0) {
-            throw command.reject("invalid vector");
+            throw new Exception("invalid vector");
         }
         // Valid. Resolve.
-        this.eventStoreService.raiseEvent(command.resolve());
+        this.eventStoreService.raiseEvent(new MoveVehicleEvent(command.getName(), command.getVector()));
 
         // Change local domain model. TODO: change this to be inferred from event store
         this.vehicleRegister.moveVehicle(command.getName(), command.getVector());
@@ -59,7 +66,7 @@ public class VehicleCommandHandler {
         // TODO: Checks?
 
         // Valid. Resolve.
-        this.eventStoreService.raiseEvent(command.resolve());
+        this.eventStoreService.raiseEvent(new RemoveVehicleEvent(command.getName()));
 
         // Change local domain model. TODO: change this to be inferred from event store
         this.vehicleRegister.deleteVehicle(command.getName());

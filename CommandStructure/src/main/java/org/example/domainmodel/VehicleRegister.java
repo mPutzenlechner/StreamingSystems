@@ -18,10 +18,7 @@ public class VehicleRegister {
 
     public void moveVehicle(String name, Position vector) {
         Vehicle vehicle = vehicleRegister.get(name);
-        vehicle.currentPosition = new Position(
-                vehicle.currentPosition.x() + vector.x(),
-                vehicle.currentPosition.y() + vector.y()
-        );
+        vehicle.moveVehicle(vector);
         vehicleRegister.replace(name, vehicle);
     }
 

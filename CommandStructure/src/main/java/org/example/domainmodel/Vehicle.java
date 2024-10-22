@@ -11,4 +11,11 @@ public class Vehicle {
         this.startPosition = startPosition;
         this.currentPosition = startPosition;
     }
+
+    public void moveVehicle(Position vector) {
+        this.currentPosition = new Position(
+                this.currentPosition.x() + vector.x(),
+                this.currentPosition.y() + vector.y()
+        );
+    }
 }

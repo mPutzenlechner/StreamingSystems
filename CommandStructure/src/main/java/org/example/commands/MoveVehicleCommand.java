@@ -20,14 +20,4 @@ public class MoveVehicleCommand implements ICommand {
     public String getName() {
         return name;
     }
-
-    @Override
-    public IEvent resolve() {
-        return new MoveVehicleEvent(this.name, this.vector);
-    }
-
-    @Override
-    public Exception reject(String reason) throws Exception {
-        throw new Exception(reason);
-    }
 }
