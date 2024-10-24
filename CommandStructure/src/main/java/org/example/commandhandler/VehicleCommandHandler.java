@@ -9,17 +9,22 @@ import org.example.events.CreateVehicleEvent;
 import org.example.events.MoveVehicleEvent;
 import org.example.events.RemoveVehicleEvent;
 import org.example.services.EventStoreService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class VehicleCommandHandler {
     private static final VehicleCommandHandler instance = new VehicleCommandHandler();
 
-    VehicleRegister vehicleRegister;
-    EventStoreService eventStoreService;
+    private final Logger logger = LoggerFactory.getLogger(VehicleCommandHandler.class);
+
+    private final VehicleRegister vehicleRegister;
+    private final EventStoreService eventStoreService;
 
 
     public VehicleCommandHandler() {
         vehicleRegister = VehicleRegister.getInstance();
         eventStoreService = EventStoreService.getInstance();
+        logger.debug("Command handler initialized");
     }
 
     public static VehicleCommandHandler getInstance() {

@@ -1,4 +1,6 @@
 package org.example.events;
 
-public interface IEvent {
+import java.io.Serializable;
+
+public interface IEvent extends Serializable {
 }
