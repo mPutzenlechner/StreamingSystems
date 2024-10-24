@@ -1,8 +1,5 @@
 package org.example.querymodel;
 import org.example.domainmodel.Position;
 
-public interface VehicleDTO {
-    public String getName();
-    public Position getPosition();
-    public int getNumberOfMoves();
+public record VehicleDTO(Position position, String name, int numberOfMoves) implements IVehicleDTO {
 }

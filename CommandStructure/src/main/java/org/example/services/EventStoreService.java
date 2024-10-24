@@ -1,4 +1,5 @@
 package org.example.services;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.jms.*;
 import jakarta.jms.Message;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -24,7 +25,7 @@ public class EventStoreService {
     private MessageProducer producer;
     private MessageConsumer consumer;
 
-    public EventStoreService() {
+    private EventStoreService() {
         try {
             String queueName = "StreamingSystemsQueue";
             ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
@@ -45,9 +46,10 @@ public class EventStoreService {
     }
 
     public void raiseEvent(IEvent event) throws Exception {
-        // We will send a text message
-        ObjectMessage message = session.createObjectMessage(event);
-        // push the message into queue
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(event);
+        TextMessage message = session.createTextMessage();
+        message.setText(json);
         producer.send(message);
         this.logger.debug("Message sent to the queue: {}", message);
     }

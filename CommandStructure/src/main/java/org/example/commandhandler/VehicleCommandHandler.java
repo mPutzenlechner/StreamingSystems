@@ -31,6 +31,7 @@ public class VehicleCommandHandler {
         return instance;
     }
 
+    /*
     public void issueCommand(ICommand command) throws Exception {
         if (command instanceof CreateVehicleCommand) {
             this.createVehicle((CreateVehicleCommand) command);
@@ -40,8 +41,9 @@ public class VehicleCommandHandler {
             this.removeVehicle((RemoveVehicleCommand) command);
         }
     }
+     */
 
-    private void createVehicle(CreateVehicleCommand command) throws Exception {
+    public void issueCommand(CreateVehicleCommand command) throws Exception {
         // Check if vehicle already exists
         String name = command.getName();
         if (vehicleRegister.vehicleExists(name)) {
@@ -55,7 +57,7 @@ public class VehicleCommandHandler {
         this.vehicleRegister.createVehicle(vehicle.name, vehicle);
     }
 
-    private void moveVehicle(MoveVehicleCommand command) throws Exception {
+    public void issueCommand(MoveVehicleCommand command) throws Exception {
         // Check validity
         if (command.getVector() == null || command.getVector().x() == 0 && command.getVector().y() == 0) {
             throw new Exception("invalid vector");
@@ -67,7 +69,7 @@ public class VehicleCommandHandler {
         this.vehicleRegister.moveVehicle(command.getName(), command.getVector());
     }
 
-    private void removeVehicle(RemoveVehicleCommand command) throws Exception {
+    public void issueCommand(RemoveVehicleCommand command) throws Exception {
         // TODO: Checks?
 
         // Valid. Resolve.
