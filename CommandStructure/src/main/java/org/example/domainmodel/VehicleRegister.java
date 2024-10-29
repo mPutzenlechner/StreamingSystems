@@ -12,13 +12,17 @@ public class VehicleRegister {
         return instance;
     }
 
+    public Vehicle getVehicle(String name) {
+        return vehicleRegister.get(name);
+    }
+
     public boolean vehicleExists(String name) {
         return vehicleRegister.containsKey(name);
     }
 
     public void moveVehicle(String name, Position vector) {
         Vehicle vehicle = vehicleRegister.get(name);
-        vehicle.moveVehicle(vector);
+        vehicle.move(vector);
         vehicleRegister.replace(name, vehicle);
     }
 
