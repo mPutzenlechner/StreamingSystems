@@ -87,3 +87,15 @@ ob es daher entfernt werden muss. Die notwendigen Checks sollten im CommandHandl
 die daraus folgenden Anpassungen am Domänenmodell vornehmen kann, und die entsprechenden Events erzeugt.
 
 ## 3.3
+Es wäre möglich, das Domänenmodell dahingehend anzupassen, dass herausgefunden werden kann, ob sich bereits 
+ein Fahrzeug auf der gewünschten Position befindet. Allerdings sind genau diese Informationen bereits im Query-Modell 
+enthalten... es wäre also eine Doppelung der Daten, die Informationen auch noch im Domänenmodell vorzuhalten. 
+Aus programmatischer Sicht macht es Sinn, die bereits vorhandene Schnittstelle zu nutzen.
+Andererseits wurde in der Vorlesung und auf dem Aufgabenblatt die Wichtigkeit betont, Domänenmodell und Querymodell 
+sauber zu trennen. Aus dem Commandhandler einen Aufruf an das Querymodell zu starten, wäre ein direkter Verstoß 
+gegen dieses Prinzip. Es stellt sich außerdem die Frage, wie sich die Funktionalität verhält, wenn das Domänenmodell 
+später aus dem Eventstore aufgebaut wird. <br/>
+Um nicht gegen die diskutierten Prinzipien zu verstoßen, werden daher die Informationen in das Domänenmodell integriert. 
+Da uns hier allerdings nur interessiert, ob ein Fahrzeug auf einer Position ist oder nicht, kann eine vereinfachte 
+Datenstruktur gewählt werden, in der nur die Namen eines Fahrzeuges auf eine Position gemapped werden. So muss die 
+Logik des Fahrzeugobjekts nicht dupliziert werden.

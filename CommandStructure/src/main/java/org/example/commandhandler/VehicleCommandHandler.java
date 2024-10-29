@@ -55,18 +55,20 @@ public class VehicleCommandHandler {
         Position newPosition = new Position(vehicle.currentPosition.x(), vehicle.currentPosition.y());
         if (vehicle.getPositionHistory().contains(newPosition) || vehicle.getNumberOfMoves() + 1 == 21) {
             // remove vehicle
-            this.vehicleRegister.deleteVehicle(command.name());
-            this.eventStoreService.raiseEvent(new RemoveVehicleEvent(command.name()));
+            this.issueCommand(new RemoveVehicleCommand(command.name()));
             return;
         }
-        // Valid. Resolve.
+        // Vehicle should not be removed. Check if there is a vehicle on new position, that needs to be removed.
+        String vehicleOnPosition = this.vehicleRegister.getVehicleOnPosition(newPosition);
+        if (vehicleOnPosition != null) {
+            this.issueCommand(new RemoveVehicleCommand(vehicleOnPosition));
+        }
+        // Valid, Done. Resolve.
         this.vehicleRegister.moveVehicle(command.name(), command.vector());
         this.eventStoreService.raiseEvent(new MoveVehicleEvent(command.name(), command.vector()));
     }
 
     public void issueCommand(RemoveVehicleCommand command) throws Exception {
-        // TODO: Checks?
-
         // Valid. Resolve.
         this.eventStoreService.raiseEvent(new RemoveVehicleEvent(command.name()));
 
