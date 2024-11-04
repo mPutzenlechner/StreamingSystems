@@ -1,9 +1,5 @@
 package org.example.domainmodel;
-import org.example.querymodel.VehicleDTO;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
