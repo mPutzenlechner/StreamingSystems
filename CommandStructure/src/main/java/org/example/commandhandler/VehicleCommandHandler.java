@@ -53,7 +53,7 @@ public class VehicleCommandHandler {
         // Check if vehicle should be removed because it moved often enough, or was on this position before.
         Vehicle vehicle = this.vehicleRegister.getVehicle(command.name());
         Position newPosition = new Position(vehicle.currentPosition.x(), vehicle.currentPosition.y());
-        if (vehicle.getPositionHistory().contains(newPosition) || vehicle.getNumberOfMoves() + 1 == 21) {
+        if (vehicle.getPositionHistory().contains(newPosition) || vehicle.getNumberOfMoves() >= 20) {
             // remove vehicle
             this.issueCommand(new RemoveVehicleCommand(command.name()));
             return;

@@ -29,7 +29,7 @@ Das zahlt sich hier als Stärke aus: um an die Queue übergeben werden zu könne
 Records bringen diese Funktionalität automatisch mit. Sowohl Objekt serialisierung als auch Serialisierung zu JSON sind 
 ohne Mehraufwand möglich. <br/>
 Für unsere Zwecke wurde die Serialisierung zu JSON gewählt. Objekt serialisierung scheint in neueren ActiveMQ - Versionen 
-als unsicher zu gelten, die übersendung von Nachichten im Textformat ist bevorzugt. Da JSON-Serialisierung einfach zu 
+als unsicher zu gelten, die übersendung von Nachrichten im Textformat ist bevorzugt. Da JSON-Serialisierung einfach zu 
 integrieren ist, bietet sie sich an. Die "Jackson"-Bibliothek bietet alle benötigten Funktionalitäten, und lässt sich 
 über annotation von Objekten und Interfaces einfach integrieren. Sie wurde für alle JSON-bezogenen Aufgaben verwendet.
 
