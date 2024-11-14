@@ -1,6 +1,5 @@
 package org.example.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.jms.Message;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
