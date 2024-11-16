@@ -4,17 +4,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.jms.*;
 import jakarta.jms.Message;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.kafka.clients.consumer.Consumer;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.example.events.IEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import java.util.List;
 import java.util.Properties;
 
-import static jakarta.jms.Session.AUTO_ACKNOWLEDGE;
-import static org.apache.activemq.ActiveMQConnection.DEFAULT_BROKER_URL;
 
 public class EventStoreService {
 
@@ -29,7 +30,6 @@ public class EventStoreService {
     private Connection connection;
     private Session session;
     private KafkaProducer<String, String> producer;
-    private KafkaConsumer<String, String> consumer;
 
     private EventStoreService() {
         Properties properties = new Properties();
@@ -42,7 +42,6 @@ public class EventStoreService {
         properties.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         properties.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         this.producer = new KafkaProducer<String, String>(properties);
-        this.consumer = new KafkaConsumer<String, String>(properties);
     }
 
     public void raiseEvent(IEvent event) throws Exception {
@@ -55,15 +54,24 @@ public class EventStoreService {
         this.logger.debug("Message sent to the queue: {}", json);
     }
 
-    public KafkaConsumer<String, String> getConsumer() throws Exception {
-        return this.consumer;
+    public Consumer<String, String> getConsumer() throws Exception {
+        Properties props = new Properties();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "172.17.0.3:9092");
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "consumerGroup");
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        // receive messages that were sent before the consumer started
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        // create the consumer using props.
+        Consumer<String, String> consumer = new KafkaConsumer<>(props);
+            String topic = "events";
+            consumer.subscribe(List.of(topic));
+            return consumer;
     }
 
     public void close() throws JMSException {
         producer.close();
         producer = null;
-        consumer.close();
-        consumer = null;
         session.close();
         session = null;
         connection.close();

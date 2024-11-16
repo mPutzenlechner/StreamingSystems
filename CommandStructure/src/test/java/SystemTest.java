@@ -26,7 +26,7 @@ public class SystemTest {
     public void insertAndGetVehicles() throws Exception {
         // Defines how long timeout between commands and queries should be
         // To allow events to propagate through the queue
-        int timeoutMillis = 100;
+        int timeoutMillis = 2000;
 
         // Create a new vehicle
         String testName = "aVehicle";

@@ -2,9 +2,8 @@ package org.example.querymodel;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.example.events.CreateVehicleEvent;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.example.events.IEvent;
 import org.example.events.MoveVehicleEvent;
 import org.example.events.RemoveVehicleEvent;
@@ -24,35 +23,48 @@ public class Projector {
     }
 
     private final Logger logger;
-    private KafkaConsumer<String, String> consumer;
+    private Consumer<String, String> consumer;
     private QueryModel queryModel;
 
     private Projector() {
         this.logger = LoggerFactory.getLogger(Projector.class);
+        this.logger.debug("Projector initialized");
         this.queryModel = QueryModel.getInstance();
         EventStoreService eventStoreService = EventStoreService.getInstance();
         String topic = "events";
         try {
             this.consumer = eventStoreService.getConsumer();
             consumer.subscribe(List.of(topic));
-            this.startMessageHandling();
+            new Thread(this::startMessageHandling).start();
         } catch (Exception e) {
             this.logger.error("Projector initialization failed with Error: {}", e.getMessage());
         }
     }
 
     private void startMessageHandling() {
-        ConsumerRecords<String, String> records = this.consumer.poll(Duration.ofMillis(1000));
-        records.forEach(record -> {
+        while (true) {
+            consumer
+                    .poll(Duration.ofMillis(200))
+                    .iterator()
+                    .forEachRemaining(
+                            record -> {
+                                try {
+                                    this.logger.debug("received kafka record on topic: {}", record.topic());
+                                    handleMessage(record.value());
+                                } catch (JsonProcessingException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                    );
             try {
-                handleMessages(record.value());
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                this.logger.error(e.getMessage());
             }
-        });
+        }
     }
 
-    private void handleMessages(String message) throws JsonProcessingException {
+    private void handleMessage(String message) throws JsonProcessingException {
         // Deserialize
         IEvent event = new ObjectMapper().readerFor(IEvent.class).readValue(message);
         if (event instanceof CreateVehicleEvent createVehicleEvent) {
