@@ -2,8 +2,6 @@ package org.example.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.jms.*;
-import jakarta.jms.Message;
-import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -26,7 +24,6 @@ public class EventStoreService {
         return instance;
     }
 
-    private static final String CLIENTID = "StreamingSystemsPublisher";
     private Connection connection;
     private Session session;
     private KafkaProducer<String, String> producer;
@@ -44,7 +41,7 @@ public class EventStoreService {
         this.producer = new KafkaProducer<String, String>(properties);
     }
 
-    public void raiseEvent(IEvent event) throws Exception {
+    public void raiseEvent(IEvent event, String vehicleName) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(event);
         String topic = "events";
@@ -54,10 +51,10 @@ public class EventStoreService {
         this.logger.debug("Message sent to the queue: {}", json);
     }
 
-    public Consumer<String, String> getConsumer() throws Exception {
+    public Consumer<String, String> getConsumer(String consumerGroup) throws Exception {
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "172.17.0.3:9092");
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "consumerGroup");
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroup);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         // receive messages that were sent before the consumer started

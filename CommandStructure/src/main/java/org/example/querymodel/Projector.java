@@ -26,6 +26,7 @@ public class Projector {
     private Consumer<String, String> consumer;
     private QueryModel queryModel;
 
+
     private Projector() {
         this.logger = LoggerFactory.getLogger(Projector.class);
         this.logger.debug("Projector initialized");
@@ -33,7 +34,7 @@ public class Projector {
         EventStoreService eventStoreService = EventStoreService.getInstance();
         String topic = "events";
         try {
-            this.consumer = eventStoreService.getConsumer();
+            this.consumer = eventStoreService.getConsumer("projector");
             consumer.subscribe(List.of(topic));
             new Thread(this::startMessageHandling).start();
         } catch (Exception e) {
@@ -41,10 +42,11 @@ public class Projector {
         }
     }
 
+
     private void startMessageHandling() {
         while (true) {
             consumer
-                    .poll(Duration.ofMillis(200))
+                    .poll(Duration.ofMillis(100))
                     .iterator()
                     .forEachRemaining(
                             record -> {

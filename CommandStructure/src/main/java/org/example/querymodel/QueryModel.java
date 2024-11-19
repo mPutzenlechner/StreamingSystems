@@ -58,6 +58,9 @@ public class QueryModel {
 
     public void removeVehicle(String name) {
         VehicleDTO oldVehicle = vehicleByName.get(name);
+        if (oldVehicle == null) {
+            return;
+        }
         vehicleByPosition.get(oldVehicle.position()).remove(oldVehicle);
         if (vehicleByPosition.get(oldVehicle.position()).isEmpty()) {
             vehicleByPosition.remove(oldVehicle.position());
