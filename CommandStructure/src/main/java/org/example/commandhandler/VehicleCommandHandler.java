@@ -40,7 +40,7 @@ public class VehicleCommandHandler {
         }
         // Check if there is a vehicle on start position, that needs to be removed.
         String vehicleOnPosition = this.vehicleRegister.getVehicleOnPosition(command.startPosition());
-        if (vehicleOnPosition != null) {
+         if (vehicleOnPosition != null) {
             this.issueCommand(new RemoveVehicleCommand(vehicleOnPosition));
         }
         // Does not exist. Generate event.
