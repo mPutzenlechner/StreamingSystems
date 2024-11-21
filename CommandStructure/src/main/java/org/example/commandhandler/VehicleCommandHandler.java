@@ -71,7 +71,7 @@ public class VehicleCommandHandler {
             this.issueCommand(new RemoveVehicleCommand(vehicleOnPosition));
         }
         // Valid, Done. Resolve.
-        IEvent event = new MoveVehicleEvent(command.name(), newPosition);
+        IEvent event = new MoveVehicleEvent(command.name(), command.vector());
         this.eventStoreService.raiseEvent(event, vehicle.name);
     }
 

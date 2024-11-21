@@ -3,6 +3,7 @@ package org.example.querymodel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.Consumer;
+import org.apache.kafka.common.TopicPartition;
 import org.example.events.CreateVehicleEvent;
 import org.example.events.IEvent;
 import org.example.events.MoveVehicleEvent;
@@ -11,6 +12,7 @@ import org.example.services.EventStoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -24,7 +26,7 @@ public class Projector {
 
     private final Logger logger;
     private Consumer<String, String> consumer;
-    private QueryModel queryModel;
+    private final QueryModel queryModel;
 
 
     private Projector() {
@@ -35,7 +37,7 @@ public class Projector {
         String topic = "events";
         try {
             this.consumer = eventStoreService.getConsumer("projector");
-            consumer.subscribe(List.of(topic));
+            consumer.assign(Collections.singleton(new TopicPartition(topic, 0)));
             new Thread(this::startMessageHandling).start();
         } catch (Exception e) {
             this.logger.error("Projector initialization failed with Error: {}", e.getMessage());
@@ -44,6 +46,8 @@ public class Projector {
 
 
     private void startMessageHandling() {
+        // Start reading messages from the beginning
+        consumer.seekToBeginning(consumer.assignment());
         while (true) {
             consumer
                     .poll(Duration.ofMillis(100))

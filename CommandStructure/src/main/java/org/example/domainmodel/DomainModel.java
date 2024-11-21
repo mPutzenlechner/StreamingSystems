@@ -3,6 +3,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import org.apache.kafka.clients.consumer.Consumer;
+import org.apache.kafka.common.TopicPartition;
 import org.example.events.CreateVehicleEvent;
 import org.example.events.IEvent;
 import org.example.events.MoveVehicleEvent;
@@ -12,10 +13,7 @@ import org.example.services.EventStoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 
@@ -31,12 +29,12 @@ public class DomainModel {
 
     private DomainModel() {
         this.logger = LoggerFactory.getLogger(Projector.class);
-        this.logger.debug("Projector initialized");
+        this.logger.warn("Domainmodel initialized");
         EventStoreService eventStoreService = EventStoreService.getInstance();
         String topic = "events";
         try {
             this.consumer = eventStoreService.getConsumer("domainmodel");
-            consumer.subscribe(List.of(topic));
+            consumer.assign(Collections.singleton(new TopicPartition(topic, 0)));
         } catch (Exception e) {
             this.logger.error("Domain model initialization failed with Error: {}", e.getMessage());
         }
@@ -64,6 +62,7 @@ public class DomainModel {
     }
 
     public Vehicle getVehicle(String name) {
+        this.logger.error("Building vehicle with name {}", name);
         AtomicReference<Vehicle> vehicle = new AtomicReference<>();
         // Collect events for requested vehicle
         List<IEvent> events = getRecords()
@@ -77,18 +76,22 @@ public class DomainModel {
                         return ((RemoveVehicleEvent) event).name().equals(name);
                     }
                 }).toList();
+        logger.error("Filtered events, building vehicle");
         // Build vehicle from events
         events.iterator()
                 .forEachRemaining(
                 event -> {
                     if (event instanceof CreateVehicleEvent createEvent) {
+                        logger.error("vehicle was created at position: {}", createEvent.startPosition());
                         vehicle.set(new Vehicle(createEvent.name(), createEvent.startPosition()));
                     } else if (event instanceof MoveVehicleEvent moveEvent) {
                         Vehicle vehicleInst = vehicle.get();
                         vehicleInst.move(moveEvent.vector());
                         vehicle.set(vehicleInst);
+                        logger.error("vehicle moved by {}, now at {}", moveEvent.vector(), vehicle.get().currentPosition);
                     } else  {
-                        vehicle.set(null);  // Vehicle has been removed
+                        vehicle.set(null);
+                        logger.error("vehicle was removed.");// Vehicle has been removed
                     }
                 }
         );
@@ -97,6 +100,7 @@ public class DomainModel {
     }
 
     public boolean vehicleExists(String name) {
+        this.logger.error("Checking if vehicle {} exists", name);
         List<IEvent> events = getRecords();
         AtomicReference<Boolean> exists = new AtomicReference<>(false);
         events.stream()
@@ -116,7 +120,7 @@ public class DomainModel {
                         exists.set(false);
                     }
                 });
-        logger.debug("vehicle exists: {}", exists.get());
+        logger.error("vehicle exists: {}", exists.get());
         return exists.get();
     }
 
@@ -138,7 +142,9 @@ public class DomainModel {
                 vehicleMap.remove(removeEvent.name());
             }
         });
+        logger.error("Built current state for vehicles: {}", vehicleMap.keySet());
         for (Vehicle vehicle : vehicleMap.values()) {
+            logger.error(vehicle.name + " at " + vehicle.currentPosition);
             if (vehicle.currentPosition == position) {
                 return vehicle.name;
             }
