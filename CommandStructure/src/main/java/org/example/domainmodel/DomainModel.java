@@ -21,7 +21,6 @@ public class DomainModel {
     private static final DomainModel instance = new DomainModel();
     private final EventStoreService eventStoreService;
     private final Logger logger;
-    // private Consumer<String, String> consumer;
     private final ObjectReader objectReader = new ObjectMapper().readerFor(IEvent.class);
 
     public static DomainModel getInstance() {

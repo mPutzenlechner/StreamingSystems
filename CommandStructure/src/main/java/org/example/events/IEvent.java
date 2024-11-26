@@ -14,5 +14,4 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = MoveVehicleEvent.class, name = "moveVehicle"),
         @JsonSubTypes.Type(value = RemoveVehicleEvent.class, name = "removeVehicle")
 })
-public interface IEvent extends Serializable {
-}
+public interface IEvent extends Serializable {}
