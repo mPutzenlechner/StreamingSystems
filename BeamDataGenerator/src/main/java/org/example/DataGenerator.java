@@ -17,6 +17,7 @@ public class DataGenerator {
     private float vMax = 100.0f;
     private Random random = new Random();
     private Thread thread;
+    private final KafkaConnector kafkaConnector = KafkaConnector.getInstance();
 
     // Set internal data generation parameters
     public DataGenerator() {
@@ -26,7 +27,7 @@ public class DataGenerator {
                 try {
                     String data = generate();
                     sendData(data);
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
             }
@@ -58,9 +59,10 @@ public class DataGenerator {
     }
 
     // Send data to Apache Beam
-    private void sendData(String data) {
+    private void sendData(String data) throws Exception {
         // Stub until apache beam has been set up
         System.out.println(data);
+        this.kafkaConnector.raiseEvent(data);
     }
 
     public void start() {
