@@ -1,3 +1,4 @@
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import jakarta.ws.rs.client.Client;
@@ -21,7 +22,7 @@ public class KafkaTest {
     private final int waitInterval = 100;
 
     @Test
-    void test() throws InterruptedException {
+    void test() throws InterruptedException, JsonProcessingException {
         // Create client
         ObjectReader objectReader = new ObjectMapper().readerFor(VehicleDTO.class);
         Client client = ClientBuilder.newClient();
@@ -39,7 +40,8 @@ public class KafkaTest {
         assertEquals(200, response.getStatus());
         Thread.sleep(waitInterval);
         response = getWebResponse(client, querySideUrl  + "/byname/" + createCommand.name());
-        VehicleDTO vehicle = response.readEntity(VehicleDTO.class);
+        String vehicleJson = response.readEntity(String.class);
+        VehicleDTO vehicle = objectReader.readValue(vehicleJson);
 
         // Assert vehicle fetched via query equals vehicle sent
         assertEquals(vehicle.name(), createCommand.name());
@@ -60,7 +62,8 @@ public class KafkaTest {
         assertEquals(200, response.getStatus());
         Thread.sleep(waitInterval);
         response = getWebResponse(client, querySideUrl  + "/byname/" + createCommand.name());
-        vehicle = response.readEntity(VehicleDTO.class);
+        vehicleJson = response.readEntity(String.class);
+        vehicle = objectReader.readValue(vehicleJson);
 
         // Assert vehicle fetched via query equals vehicle sent
         assertEquals(vehicle.name(), moveCommand.name());
