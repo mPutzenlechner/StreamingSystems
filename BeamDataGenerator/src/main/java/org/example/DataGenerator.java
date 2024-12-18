@@ -11,8 +11,8 @@ public class DataGenerator {
 
     private int numSensors = 5;
     private int maxDatasets = 3;
-    private int intervalMsMin = 400;
-    private int intervalMsMax = 1000;
+    private int intervalMsMin = 2000;
+    private int intervalMsMax = 3000;
     private float vMin = -20.0f;
     private float vMax = 100.0f;
     private Random random = new Random();
