@@ -39,6 +39,9 @@ public class Main {
 
                             for (String speedStr : speedStrings) {
                                 double speed = Double.parseDouble(speedStr) * 3.6;  // Convert m/s to km/h
+                                if (speed < 0) {  // Filter measuring errors
+                                    continue;
+                                }
                                 out.output(KV.of(sensorId, speed));
                             }
                         } catch (Exception e) {
