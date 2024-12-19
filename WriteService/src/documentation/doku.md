@@ -70,9 +70,13 @@ bewährtes Test framework an, um Tests jeglicher Art durchzuführen. Unittests e
 hierfür die Abhängigkeiten innerhalb der Applikation zu hoch sind. Einzelne Komponenten geben ihre Outputs direkt ans 
 nächste System weiter und viele der Klassen existieren in einem Singleton-Kontext, was das Testen im Gegensatz 
 zu erzeugten Objekten mit dependency-injection deutlich erschwert. Daher wird der Gesamtkontext getestet: Kommandos 
-werden an den Command-Handler übergeben, und nachdem der Server etwas Zeit zur Verarbeitung hatte, wird getestet, 
-ob eine Query das erwartete Ergebnis liefert. So können alle Kommandos und Queries einmal durchgetestet werden und 
-man erhält einen guten Einblick, ob das System zuverlässig funktioniert.
+werden an die Schnittstellen der REST-API gesendet. Anschließend wird einige Sekunden gewartet, damit die Events 
+auf der Query-Seite ankommen können. Danach wird der Stand der Query-Seite abgefragt, um die korrekte Ausführung zu 
+überprüfen. Um dem normalen Betrieb nicht in die Quere z kommen, wird ein spezielles Testobjekt definiert, welches 
+nach den Tests auch wieder entfernt wird.
+Der Test über die API-Schnittstelle ermöglicht einen Test des Gesamtsystems, auch in einem verteilten Szenario. 
+Die Write-Seite und Query-Seite können getrennt werden und in verschiedenen Containern liegen, vielleicht sogar skaliert 
+werden. Solange die API definiert und erreichbar ist, kann das System getestet werden.
 
 # Aufgabe 3
 
@@ -91,11 +95,22 @@ Es wäre möglich, das Domänenmodell dahingehend anzupassen, dass herausgefunde
 ein Fahrzeug auf der gewünschten Position befindet. Allerdings sind genau diese Informationen bereits im Query-Modell 
 enthalten... es wäre also eine Doppelung der Daten, die Informationen auch noch im Domänenmodell vorzuhalten. 
 Aus programmatischer Sicht macht es Sinn, die bereits vorhandene Schnittstelle zu nutzen.
-Andererseits wurde in der Vorlesung und auf dem Aufgabenblatt die Wichtigkeit betont, Domänenmodell und Querymodell 
-sauber zu trennen. Aus dem Commandhandler einen Aufruf an das Querymodell zu starten, wäre ein direkter Verstoß 
+Andererseits wurde in der Vorlesung und auf dem Aufgabenblatt die Wichtigkeit betont, Domänenmodell und Query-Modell 
+sauber zu trennen. Aus dem Command handler einen Aufruf an das Query-Modell zu starten, wäre ein direkter Verstoß 
 gegen dieses Prinzip. Es stellt sich außerdem die Frage, wie sich die Funktionalität verhält, wenn das Domänenmodell 
 später aus dem Eventstore aufgebaut wird. <br/>
 Um nicht gegen die diskutierten Prinzipien zu verstoßen, werden daher die Informationen in das Domänenmodell integriert. 
 Da uns hier allerdings nur interessiert, ob ein Fahrzeug auf einer Position ist oder nicht, kann eine vereinfachte 
 Datenstruktur gewählt werden, in der nur die Namen eines Fahrzeuges auf eine Position gemapped werden. So muss die 
 Logik des Fahrzeugobjekts nicht dupliziert werden.
+
+# Aufgabe 4
+
+Die Aufgabe 4 wurde nicht bearbeitet, da sie für Einzel-arbeitende erspart wurde.
+
+# Aufgabe 5
+
+Durch die zuvor beschriebene Struktur, in der der EventStoreService von den anderen Systemen getrennt ist, ließ sich 
+dieser recht einfach von ActiveMQ in Kafka umbauen. So musste nur eine Klasse ersetzt werden, die commands und events 
+konnten gleich bleiben. Auf dem Kafka-Server gibt es ein Topic, hier werden die Events im JSON-Format eingestellt. 
+
