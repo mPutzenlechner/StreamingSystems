@@ -7,12 +7,11 @@ import com.espertech.esper.compiler.client.EPCompiler;
 import com.espertech.esper.compiler.client.EPCompilerProvider;
 import com.espertech.esper.runtime.client.*;
 import com.espertech.esper.common.client.configuration.*;
-import com.espertech.esper.common.client.configuration.common.*;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+
 
 public class Main {
 

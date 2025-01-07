@@ -1,5 +1,4 @@
 package org.example;
-
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.kafka.KafkaIO;
 import org.apache.beam.sdk.transforms.*;
@@ -14,7 +13,6 @@ public class Main {
     public static void main(String[] args) {
         // Define window size in seconds
         int windowSizeSec = 30;
-
         Pipeline pipeline = Pipeline.create();
 
         // Read events from kafka topic

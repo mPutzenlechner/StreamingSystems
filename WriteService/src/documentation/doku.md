@@ -113,4 +113,41 @@ Die Aufgabe 4 wurde nicht bearbeitet, da sie für Einzel-arbeitende erspart wurd
 Durch die zuvor beschriebene Struktur, in der der EventStoreService von den anderen Systemen getrennt ist, ließ sich 
 dieser recht einfach von ActiveMQ in Kafka umbauen. So musste nur eine Klasse ersetzt werden, die commands und events 
 konnten gleich bleiben. Auf dem Kafka-Server gibt es ein Topic, hier werden die Events im JSON-Format eingestellt. 
+Die Rekonstruktion des Domänenmodells auf Write-Seite funktioniert über einen Replay aller Events, die auf Client-Seite 
+nach den relevanten Events gefiltert und verarbeitet werden. Das ist suboptimal: um das aktuelle Fahrzeug auf einer 
+Position herauszufinden, dauert die Anfrage ca. 1.4 Sekunden mit relativ wenigen Events. Das könnte man optimieren, 
+indem schon bei der Abfrage der Events von Kafka eine entsprechende Filterung angelegt wird, es scheint aber in Kafka 
+keine Möglichkeit zu geben das zu machen.
+Auf Read-Seite bestehen diese Probleme nicht, da hier der aktuelle Stand immer noch progressiv aufgebaut wird.
+Bei Start des Programmes wird einmal die gesamte Historie abgefragt, um den aktuellen Stand herzustellen. Da diese 
+Aktion einmal pro Programmstart ausgeführt wird, ist dies ein rechtfertigbarer Aufwand.
+
+Beim Vergleich mit anderen Lösungen kam eine interessante Diskussion über die Schachtelung von Events auf. 
+Man stelle sich folgendes Szenario vor: auf einer Position, auf die ein Fahrzeug sich bewegt, ist schon ein Fahrzeug. 
+Nach Definition muss dieses nun entfernt werden. In meiner Lösung wird das wie folgt gelöst: innerhalb des 
+moveVehicle Handlers wird der removeVehicle Handler aufgerufen, und bekommt die entsprechenden Parameter mitgegeben. 
+Ein berechtigter Einwand war, dass so keine Konsistenz gewährleistet wird. Schlägt beispielsweise die Ausführung des 
+remove-Commands fehl, würde der move-Command trotzdem weiterlaufen. Das kann zu einer Dateninkonsistenz führen.
+Für unsere Zwecke war meine Argumentation, dass eine Mitigation dieses Problem unverhältnismäßig viel Arbeit mit sich 
+bringen würde. Außerdem sollte dieses Problem als Vergleich mit einer anderen Lösung bestehen bleiben.
+
+# Aufgabe 6
+
+Die Implementierung des Datengenerators war unproblematisch. Die entsprechenden Parameter können als Konstanten 
+definiert werden. Auf deren Basis werden Zufallswerte generiert und in einen String im entsprechenden Format zusammengefügt. 
+Dieser wird in einem eigenen Kafka-Topic eingestellt, von wo sie abgeholt werden können. Auch die geforderten negativen 
+Werte und leeren Nachrichten werden durch die Zufallswerte abgedeckt.
+
+# Aufgabe 7
+
+Die Beam-Pipeline kann sich über die integrierte Kafka-Unterstützung die Nachrichten aus dem definierten Topic 
+abholen, die Generierung der Beam-Werte geschieht automatisch. Diese werden in einer PCollection gesammelt. 
+Anschließend durchlaufen sie einen Filter, in dem die einzelnen Nachrichtenkomponenten voneinander getrennt werden, 
+die ungültigen Nachrichten aussortiert bzw. ignoriert werden. Anschließend werden die Nachrichten in Windows eingeteilt 
+und die Einheit umgerechnet.
+Als sinnvolle Darstellungsmöglichkeit ist hier eine textbasierte Ausgabe implementiert. Die Darstellung in Graphen 
+würde sich hier auch anbieten.
+
+# Aufgabe 8
+
 
