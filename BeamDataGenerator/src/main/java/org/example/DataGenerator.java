@@ -52,7 +52,10 @@ public class DataGenerator {
         StringBuilder data = new StringBuilder();
         data.append(date).append(" ").append(sensor).append(" ");
         for (int i = 0; i < numValues; i++) {
-            data.append(random.nextFloat() * vRange + vMin).append(" ");
+            data.append(random.nextFloat() * vRange + vMin);
+            if (i < numValues - 1) {
+                data.append(",");
+            }
         }
 
         return data.toString();

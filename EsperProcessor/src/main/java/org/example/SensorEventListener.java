@@ -17,9 +17,19 @@ public class SensorEventListener implements UpdateListener {
     public void update(EventBean[] newEvents, EventBean[] oldEvents, EPStatement statement, EPRuntime runtime) {
         System.out.println(Arrays.toString(newEvents));
         if (newEvents != null) {
-            int sensorId = (int) newEvents[0].get("sensorId");
-            double avgSpeed = (double) newEvents[0].get("avgSpeed");
-            System.out.println("Sensor " + sensorId + ": Durchschnittsgeschwindigkeit = " + avgSpeed + " m/s");
+            for (EventBean newEvent : newEvents) {
+                try {
+                    int sensorId = (int) newEvent.get("sensorId");
+                    if (newEvent.get("avgSpeed") == null) {
+                        continue;
+                    }
+                    double avgSpeed = (double) newEvent.get("avgSpeed");
+                    System.out.println("Sensor " + sensorId + ": Durchschnittsgeschwindigkeit = " + avgSpeed + " km/h");
+
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }
         }
     }
 }

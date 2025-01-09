@@ -7,10 +7,6 @@ import com.espertech.esper.compiler.client.EPCompiler;
 import com.espertech.esper.compiler.client.EPCompilerProvider;
 import com.espertech.esper.runtime.client.*;
 import com.espertech.esper.common.client.configuration.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
 
 
 public class Main {
@@ -23,8 +19,8 @@ public class Main {
         // Define EPL requests
         String epl = "@name('AverageSpeed') " +
                 "select sensorId, avg(speed) as avgSpeed " +
-                "from SensorEvent#time_batch(1 min) " +
-                "where speed is not null " +
+                "from SensorEvent#time_batch(30 sec) " +
+                "where speed is not null and speed > 0 " +
                 "group by sensorId";
 
         // Prepare compiler
@@ -37,6 +33,10 @@ public class Main {
         runtime.initialize();
         EPDeployment deployment = runtime.getDeploymentService().deploy(epCompiled);
 
+        // Hook kafka events
+        Projector projector = new Projector(runtime);
+
+
         // Register listener for requests
         EPStatement statement = runtime
                 .getDeploymentService()
@@ -45,24 +45,5 @@ public class Main {
                         "AverageSpeed"
                 );
         statement.addListener(new SensorEventListener());
-
-
-        // Simulate incoming events
-        TimeZone tz = TimeZone.getTimeZone("UTC");
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
-        df.setTimeZone(tz);
-
-        runtime.getEventService().sendEventBean(new SensorEvent(df.format(new Date()), 2,
-                /* new double[]{ */31.3 /*, 22.3, 21.5}*/), "SensorEvent"
-        );
-        runtime.getEventService().sendEventBean(new SensorEvent(df.format(new Date()), 1,
-                /* new double[]{ */1.4 /*, 11.2, 71.4}*/), "SensorEvent"
-        );
-        runtime.getEventService().sendEventBean(new SensorEvent(df.format(new Date()), 2,
-                /* new double[]{ */36.3 /*, 32.2, 20.5}*/), "SensorEvent"
-        );
-        runtime.getEventService().sendEventBean(new SensorEvent(df.format(new Date()), 3,
-                /* new double[]{ */31.9 /*, 22.3, 10.0}*/), "SensorEvent"
-        );
     }
 }
