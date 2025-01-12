@@ -150,4 +150,21 @@ würde sich hier auch anbieten.
 
 # Aufgabe 8
 
+## Umsetzung
+
+Für Esper existiert wohl auch ein Plugin, mit dem Kafka Nachrichten importiert werden können. Da ich dieses und auch 
+passende Dokumentation nicht gefunden habe, entschied ich mich für einen selbstgebauten Konnektor. Zwar ließ die 
+Aufgabenstellung offen, ob überhaupt die Daten aus der Kafka-Queue verwendet werden sollen. Dies erschien aber 
+sinnvoll, schließlich war der Generator schon implementiert und die Kafka-Queue aufgesetzt. Das ermöglicht außerdem 
+den direktesten Vergleich mit der Beam-Pipeline aus Aufgabe 7.
+Als Konnektor habe ich daher den Kafka-Konsumenten aus Aufgabe 5 übernommen und modifiziert, sodass er die Events 
+aus dem passenden Topic abholt, und diese als Esper-Events im Esper-System raised.
+Dort kann mithilfe einer EPL-Abfrage die Validität der Daten überprüft und gleichzeitig die Durchschnittsgeschwindigkeit 
+über einen Zeitraum von 30 Sekunden berechnet werden. Diese wird, ihrem erzeugenden Sensor zugeordnet, in einem neuen... 
+"Kanal"? veröffentlicht. Auf diesem wird eine zweite EPL-Abfrage aufgesetzt, die für jeden Sensor erkennt, ob seit der 
+letzten Eventveröffentlichung, also in den letzten 30 Sekunden, ein Geschwindigkeitsabfall vorliegt, der für eine 
+Stau-Bildung sprechen würde. Ist das der Fall, wird wieder ein neues Event erzeugt, das auf diesen Umstand hinweist.
+
+## Teststrategie
+
 

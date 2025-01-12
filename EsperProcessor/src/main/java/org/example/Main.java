@@ -12,19 +12,21 @@ import com.espertech.esper.common.client.configuration.*;
 public class Main {
 
     public static void main(String[] args) throws EPCompileException, EPDeployException {
+
         // Configure the esper engine
         Configuration configuration = new Configuration();
         configuration.getCommon().addEventType(SensorEvent.class);
         configuration.getCommon().addEventType(SpeedDecreaseEvent.class);
 
-        // Define EPL requests
+        // EPL for calculating average speed per sensor
         String avgSpeedEPL = "@name('AverageSpeed') " +
                 "insert into AverageSpeedEvent(sensorId, avgSpeed) " +
                 "select sensorId, avg(speed) as avgSpeed " +
-                "from SensorEvent#time_batch(1 min) " +
+                "from SensorEvent#time_batch(30 sec) " +
                 "where speed is not null " +
                 "group by sensorId; ";
 
+        // EPL for detecting speed decreases
         String speedDecreaseEPL = "@name('SpeedDecrease') " +
                 "insert into SpeedDecreaseEvent(sensorId, prevAvgSpeed, currAvgSpeed) " +
                 "select a.sensorId as sensorId, a.avgSpeed as prevAvgSpeed, b.avgSpeed as currAvgSpeed " +
@@ -44,7 +46,7 @@ public class Main {
         // Hook kafka events
         Projector projector = new Projector(runtime);
 
-        // Register listener for requests
+        // Register listeners for results
         runtime.getDeploymentService()
                 .getStatement(
                         deployment.getDeploymentId(),
