@@ -15,18 +15,26 @@ public class Main {
         // Configure the esper engine
         Configuration configuration = new Configuration();
         configuration.getCommon().addEventType(SensorEvent.class);
+        configuration.getCommon().addEventType(SpeedDecreaseEvent.class);
 
         // Define EPL requests
-        String epl = "@name('AverageSpeed') " +
+        String avgSpeedEPL = "@name('AverageSpeed') " +
+                "insert into AverageSpeedEvent(sensorId, avgSpeed) " +
                 "select sensorId, avg(speed) as avgSpeed " +
-                "from SensorEvent#time_batch(30 sec) " +
-                "where speed is not null and speed > 0 " +
-                "group by sensorId";
+                "from SensorEvent#time_batch(1 min) " +
+                "where speed is not null " +
+                "group by sensorId; ";
+
+        String speedDecreaseEPL = "@name('SpeedDecrease') " +
+                "insert into SpeedDecreaseEvent(sensorId, prevAvgSpeed, currAvgSpeed) " +
+                "select a.sensorId as sensorId, a.avgSpeed as prevAvgSpeed, b.avgSpeed as currAvgSpeed " +
+                "from pattern [every a = AverageSpeedEvent -> " +
+                "b = AverageSpeedEvent(a.sensorId = b.sensorId and b.avgSpeed < a.avgSpeed)];";
 
         // Prepare compiler
         EPCompiler compiler = EPCompilerProvider.getCompiler();
         CompilerArguments arguments = new CompilerArguments(configuration);
-        EPCompiled epCompiled = compiler.compile(epl, arguments);
+        EPCompiled epCompiled = compiler.compile(avgSpeedEPL + speedDecreaseEPL, arguments);
 
         // Deploy requests
         EPRuntime runtime = EPRuntimeProvider.getDefaultRuntime(configuration);
@@ -36,14 +44,16 @@ public class Main {
         // Hook kafka events
         Projector projector = new Projector(runtime);
 
-
         // Register listener for requests
-        EPStatement statement = runtime
-                .getDeploymentService()
+        runtime.getDeploymentService()
                 .getStatement(
                         deployment.getDeploymentId(),
                         "AverageSpeed"
-                );
-        statement.addListener(new SensorEventListener());
+                ).addListener(new SensorEventListener());
+        runtime.getDeploymentService()
+                .getStatement(
+                        deployment.getDeploymentId(),
+                        "SpeedDecrease"
+                ).addListener(new SpeedDecreaseEventListener());
     }
 }
