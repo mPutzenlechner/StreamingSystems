@@ -167,4 +167,12 @@ Stau-Bildung sprechen würde. Ist das der Fall, wird wieder ein neues Event erze
 
 ## Teststrategie
 
-
+Ein sinnvoller Test wäre es, per Unittest Testdaten in das System einzufügen und den Output zu überprüfen. 
+Beispiele für sinnvolle Tests wären:
+- Funktioniert die Konvertierung von m/s zu km/h?
+- werden mehrere Geschwindigkeitswerte pro Nachricht sinnvoll zusammengefasst?
+- Wird ein Geschwindigkeitsabfall korrekt erkannt und mitgeteilt?
+- Werden falsche Werte und fehlende Werte korrekt behandelt?
+Um diese Tests durchzuführen, könnte ein Testproducer geschrieben werden, der die entsprechenden Werte in Kafka 
+einstellt. So würde das gesamte System, inklusive der Datenaufnahme getestet werden. Alternativ könnte man sich 
+entscheiden, Kafka auszulassen. Dann würden die Testwerte beispielsweise per JUnit direkt in das System eingefügt.
