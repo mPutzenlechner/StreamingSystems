@@ -140,6 +140,8 @@ Werte und leeren Nachrichten werden durch die Zufallswerte abgedeckt.
 
 # Aufgabe 7
 
+## Umsetzung
+
 Die Beam-Pipeline kann sich über die integrierte Kafka-Unterstützung die Nachrichten aus dem definierten Topic 
 abholen, die Generierung der Beam-Werte geschieht automatisch. Diese werden in einer PCollection gesammelt. 
 Anschließend durchlaufen sie einen Filter, in dem die einzelnen Nachrichtenkomponenten voneinander getrennt werden, 
@@ -147,6 +149,17 @@ die ungültigen Nachrichten aussortiert bzw. ignoriert werden. Anschließend wer
 und die Einheit umgerechnet.
 Als sinnvolle Darstellungsmöglichkeit ist hier eine textbasierte Ausgabe implementiert. Die Darstellung in Graphen 
 würde sich hier auch anbieten.
+
+## Teststrategie
+
+Um die Korrektheit der Lösung zu überprüfen, könnten hier kontrollierte Testeingaben in die Kafka-Queue eingefügt 
+werden. So kann gewährleistet werden, dass das korrekte Ergebnis bekannt ist, und überprüft werden kann.
+Wichtig zu überprüfen wäre in dieser Aufgabe:
+- Werden die Durchschnittswerte korrekt berechnet?
+- Wird korrekt mit fehlerhaften Daten umgegangen?
+- Funktioniert das Windowing korrekt?
+Da die Kafka-Pipeline hier ein wesentlicher Bestandteil des Systems ist, würde ich an dieser Stelle eine Abwandlung
+des Datengenerators schreiben, der statt den zufälligen Daten kontrollierte Daten liefert.
 
 # Aufgabe 8
 
