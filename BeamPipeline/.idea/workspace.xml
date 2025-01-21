@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="13638128-fb36-4769-bd16-266972b96542" name="Changes" comment="some more stuff">
+      <change afterPath="$PROJECT_DIR$/../EsperProcessor/src/main/java/org/example/KafkaConnector.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../EsperProcessor/src/main/java/org/example/Projector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EsperProcessor/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../EsperProcessor/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EsperProcessor/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../EsperProcessor/src/main/java/org/example/Main.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;mPutzenlechner&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/mPutzenlechner/StreamingSystems.git&quot;,
+    &quot;accountId&quot;: &quot;4af069bb-63ed-4bb7-a045-ee60873bbdd6&quot;
+  }
+}</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="Security Analysis" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2q1USomHhvU8k2QhqaN58qd5IuS" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.KafkaToBeamPipeline.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;beam&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;/home/mpr/IdeaProjects/StreamingSystems/BeamPipeline/src/main/java/org/example/Main.java&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.22562.218" />
+        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-IU-243.22562.218" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="13638128-fb36-4769-bd16-266972b96542" name="Changes" comment="" />
+      <created>1733829580986</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1733829580986</updated>
+      <workItem from="1733829582339" duration="3419000" />
+      <workItem from="1733844304943" duration="1822000" />
+      <workItem from="1733992870611" duration="1539000" />
+      <workItem from="1734426494655" duration="3287000" />
+      <workItem from="1734431127644" duration="1316000" />
+      <workItem from="1734531498853" duration="3352000" />
+      <workItem from="1734611993160" duration="2930000" />
+      <workItem from="1734614945068" duration="41000" />
+      <workItem from="1734615635433" duration="1001000" />
+      <workItem from="1736266374680" duration="2041000" />
+      <workItem from="1736426153478" duration="21000" />
+      <workItem from="1736427412605" duration="496000" />
+    </task>
+    <task id="LOCAL-00001" summary="First working version for task 7">
+      <option name="closed" value="true" />
+      <created>1734533910015</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1734533910015</updated>
+    </task>
+    <task id="LOCAL-00002" summary="filter out speed values below 0 as measuring errors">
+      <option name="closed" value="true" />
+      <created>1734537279207</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1734537279207</updated>
+    </task>
+    <task id="LOCAL-00003" summary="some more stuff">
+      <option name="closed" value="true" />
+      <created>1734616727513</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1734616727513</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="First working version for task 7" />
+    <MESSAGE value="filter out speed values below 0 as measuring errors" />
+    <MESSAGE value="some more stuff" />
+    <option name="LAST_COMMIT_MESSAGE" value="some more stuff" />
+  </component>
+</project>
